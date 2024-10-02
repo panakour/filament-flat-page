@@ -4,15 +4,13 @@ namespace Panakour\FilamentFlatPage;
 
 class FlatFilePageManager
 {
-    public function __construct(private readonly FlatFile $flatFile)
-    {
-    }
+    public function __construct(private readonly FlatFile $flatFile) {}
 
-    public function get(string $fileName, string $key, string $locale = null)
+    public function get(string $fileName, string $key, ?string $locale = null)
     {
         $data = $this->flatFile->setStore($fileName)->all();
 
-        if (!isset($data[$key])) {
+        if (! isset($data[$key])) {
             return null;
         }
 
@@ -29,5 +27,4 @@ class FlatFilePageManager
     {
         return $this->flatFile->setStore($fileName)->all();
     }
-
 }

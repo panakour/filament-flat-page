@@ -1,13 +1,13 @@
 <?php
 
-use Panakour\FilamentFlatPage\FlatFilePageManager;
-use Panakour\FilamentFlatPage\FlatFile;
 use Filament\Forms\Components\TextInput;
+use Panakour\FilamentFlatPage\FlatFile;
+use Panakour\FilamentFlatPage\FlatFilePageManager;
 
 function createTestPage()
 {
-    return new class extends \Panakour\FilamentFlatPage\Pages\FlatPage {
-
+    return new class extends \Panakour\FilamentFlatPage\Pages\FlatPage
+    {
         public function getFileName(): string
         {
             return 'test-page.json';
@@ -47,7 +47,7 @@ it('can create a page, save it, and retrieve its contents', function () {
     $filePath = storage_path('app/flat-pages/test-page.json');
     expect(file_exists($filePath))->toBeTrue();
 
-    $manager = new FlatFilePageManager(new FlatFile());
+    $manager = new FlatFilePageManager(new FlatFile);
     $savedTitle = $manager->get('test-page.json', 'title');
     $savedContent = $manager->get('test-page.json', 'content');
 
@@ -73,7 +73,7 @@ it('can handle updates to existing pages', function () {
 
     $page->update();
 
-    $manager = new FlatFilePageManager(new FlatFile());
+    $manager = new FlatFilePageManager(new FlatFile);
     $updatedTitle = $manager->get('test-page.json', 'title');
     $updatedContent = $manager->get('test-page.json', 'content');
 
@@ -114,7 +114,7 @@ it('can create a page with multilingual fields, save it, and retrieve its conten
     $filePath = storage_path('app/flat-pages/test-page.json');
     expect(file_exists($filePath))->toBeTrue();
 
-    $manager = new FlatFilePageManager(new FlatFile());
+    $manager = new FlatFilePageManager(new FlatFile);
 
     expect($manager->get('test-page.json', 'translatable_text', 'en'))->toBe('English Translatable Text');
     expect($manager->get('test-page.json', 'translatable_text', 'fr'))->toBe('Texte Traduisible Français');
@@ -130,7 +130,7 @@ it('returns null for non-existent translations', function () {
     $page->form->fill(['title' => 'English Title', 'content' => 'English Content', 'translatable_text' => 'English Text']);
     $page->update();
 
-    $manager = new FlatFilePageManager(new FlatFile());
+    $manager = new FlatFilePageManager(new FlatFile);
 
     expect($manager->get('test-page.json', 'translatable_text', 'en'))->toBe('English Text');
 

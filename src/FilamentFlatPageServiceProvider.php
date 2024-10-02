@@ -36,9 +36,10 @@ class FilamentFlatPageServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {
+    public function packageRegistered(): void
+    {
         $this->app->singleton(FlatFilePageManager::class, function () {
-            return new FlatFilePageManager(new FlatFile());
+            return new FlatFilePageManager(new FlatFile);
         });
     }
 
@@ -46,5 +47,4 @@ class FilamentFlatPageServiceProvider extends PackageServiceProvider
     {
         return 'panakour/filament-flat-page';
     }
-
 }

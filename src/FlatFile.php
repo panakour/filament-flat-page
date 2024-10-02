@@ -7,7 +7,9 @@ use Spatie\Valuestore\Valuestore;
 class FlatFile
 {
     protected Valuestore $store;
+
     protected array $translatableFields;
+
     protected string $path;
 
     public function __construct(string $fileName = '', array $translatableFields = [])
@@ -22,9 +24,10 @@ class FlatFile
 
     public function setStore(string $fileName): self
     {
-        if (!empty($fileName)) {
+        if (! empty($fileName)) {
             $this->store = Valuestore::make($this->path . $fileName);
         }
+
         return $this;
     }
 
