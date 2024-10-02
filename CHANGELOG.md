@@ -7,7 +7,3 @@ All notable changes to `filament-flat-page` will be documented in this file.
 ### Initial release
 
 - Initial release with support for Laravel 11
-
-## 1.0.0 - 202X-XX-XX
-
-- initial release
