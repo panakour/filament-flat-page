@@ -48,13 +48,28 @@ php artisan vendor:publish --tag="filament-flat-page-views"
 1. Create a new page that extends `FlatPage`:
 
 ```php
+<?php
+
+namespace App\Filament\Pages;
+
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Panakour\FilamentFlatPage\Pages\FlatPage;
 
-class SettingsPage extends FlatPage
+class Settings extends FlatPage
 {
+
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
     protected static ?string $navigationGroup = 'Settings';
     protected static ?string $title = 'Settings';
+
+
+    public function getSubheading(): ?string
+    {
+        return __('Manage your website settings');
+    }
 
     public function getFileName(): string
     {
@@ -63,15 +78,92 @@ class SettingsPage extends FlatPage
 
     protected function getTranslatableFields(): array
     {
-        return ['site_name', 'site_description'];
+        return ['site_name', 'site_description', 'contact_address', 'contact_form_title', 'contact_form_content'];
     }
 
     protected function getFlatFilePageForm(): array
     {
         return [
-            // Your form schema here
+            Tabs::make('Settings')
+                ->tabs([
+                    Tabs\Tab::make('General')
+                        ->icon('heroicon-o-computer-desktop')
+                        ->schema([
+                            Section::make('App Settings')
+                                ->icon('heroicon-o-computer-desktop')
+                                ->schema([
+                                    TextInput::make('site_name')
+                                        ->required()
+                                        ->hint('Translatable field.')
+                                        ->hintIcon('heroicon-o-language')
+                                        ->label('Site Name'),
+                                    Textarea::make('site_description')
+                                        ->hint('Translatable field.')
+                                        ->hintIcon('heroicon-o-language')
+                                        ->label('Site Description')
+                                        ->rows(3),
+                                ]),
+                        ]),
+
+                    Tabs\Tab::make('Contact')
+                        ->icon('heroicon-o-envelope')
+                        ->schema([
+                            Section::make('Contact Information')
+                                ->icon('heroicon-o-envelope')
+                                ->schema([
+                                    TextInput::make('contact_email')
+                                        ->email()
+                                        ->required()
+                                        ->label('Contact Email'),
+                                    TextInput::make('contact_phone')
+                                        ->tel()
+                                        ->label('Contact Phone'),
+                                    Textarea::make('contact_address')
+                                        ->hint('Translatable field.')
+                                        ->hintIcon('heroicon-o-language')
+                                        ->label('Address')
+                                        ->rows(3),
+                                ]),
+
+                            Section::make('Contact Form')
+                                ->schema([
+                                    TextInput::make('contact_form_title')
+                                        ->hint('Translatable field.')
+                                        ->hintIcon('heroicon-o-language')
+                                        ->label('Contact Form Title'),
+                                    Textarea::make('contact_form_content')
+                                        ->hint('Translatable field.')
+                                        ->hintIcon('heroicon-o-language')
+                                        ->label('Contact Form Content')
+                                        ->rows(3),
+                                ]),
+                        ]),
+
+                    Tabs\Tab::make('Social Networks')
+                        ->icon('heroicon-o-heart')
+                        ->schema([
+                            Section::make('Social Media Links')
+                                ->icon('heroicon-o-heart')
+                                ->schema([
+                                    TextInput::make('facebook')
+                                        ->url()
+                                        ->label('Facebook URL'),
+                                    TextInput::make('twitter')
+                                        ->url()
+                                        ->label('Twitter URL'),
+                                    TextInput::make('instagram')
+                                        ->url()
+                                        ->label('Instagram URL'),
+                                    TextInput::make('linkedin')
+                                        ->url()
+                                        ->label('LinkedIn URL'),
+                                ]),
+                        ]),
+                ])
+                ->columnSpan('full'),
         ];
     }
+
 }
 ```
 
