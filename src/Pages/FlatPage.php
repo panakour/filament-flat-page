@@ -8,6 +8,9 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Panakour\FilamentFlatPage\FlatFile;
 
+/**
+ * @property-read \Filament\Forms\Form $form
+ */
 abstract class FlatPage extends Page
 {
     protected static string $view = 'filament-flat-page::flat-page';
@@ -63,7 +66,6 @@ abstract class FlatPage extends Page
         if (! filament()->hasPlugin('spatie-laravel-translatable')) {
             return $locales;
         }
-
         $plugin = filament('spatie-laravel-translatable');
         foreach ($plugin->getDefaultLocales() as $locale) {
             $locales[$locale] = $plugin->getLocaleLabel($locale) ?? $locale;

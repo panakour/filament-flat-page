@@ -9,5 +9,7 @@ parameters:
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
-    checkMissingIterableValueType: false
-
+    ignoreErrors:
+        -
+            message: '#Call to an undefined method Filament\\Contracts\\Plugin|Filament\\FilamentManager::(getDefaultLocales|getLocaleLabel)\(\)#'
+            path: src/Pages/FlatPage.php
