@@ -60,7 +60,7 @@ abstract class FlatPage extends Page
     {
         $locales = [];
 
-        if (!filament()->hasPlugin("spatie-laravel-translatable")) {
+        if (! filament()->hasPlugin('spatie-laravel-translatable')) {
             return $locales;
         }
 
@@ -75,7 +75,7 @@ abstract class FlatPage extends Page
     protected function getLocaleOptions(): array
     {
         $locales = $this->getLocaleFromSpatieIfAvailable();
-        if (!empty($locales)) {
+        if (! empty($locales)) {
             return $locales;
         }
         $locales = $this->getTranslatableLocales();
@@ -95,13 +95,13 @@ abstract class FlatPage extends Page
 
     protected function getHeaderActions(): array
     {
-        if (!$this->hasTranslatableFields()) {
+        if (! $this->hasTranslatableFields()) {
             return [];
         }
 
         return [
             Actions\SelectAction::make('switchLocale')
-                ->label(fn() => strtoupper($this->activeLocale))
+                ->label(fn () => strtoupper($this->activeLocale))
                 ->options($this->getLocaleOptions()),
         ];
     }
@@ -147,6 +147,6 @@ abstract class FlatPage extends Page
 
     protected function hasTranslatableFields(): bool
     {
-        return !empty($this->getTranslatableFields());
+        return ! empty($this->getTranslatableFields());
     }
 }
