@@ -44,5 +44,4 @@ final class FilamentFlatPageServiceProvider extends PackageServiceProvider
             return new FlatFilePageManager(new FlatFile);
         });
     }
-
 }
