@@ -45,8 +45,4 @@ final class FilamentFlatPageServiceProvider extends PackageServiceProvider
         });
     }
 
-    protected function getAssetPackageName(): ?string
-    {
-        return 'panakour/filament-flat-page';
-    }
 }
