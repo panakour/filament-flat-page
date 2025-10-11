@@ -1,9 +1,9 @@
 <?php
 
-use Panakour\FilamentFlatPage\Pages\FlatPage;
 use Filament\Forms\Components\TextInput;
 use Panakour\FilamentFlatPage\FlatFile;
 use Panakour\FilamentFlatPage\FlatFilePageManager;
+use Panakour\FilamentFlatPage\Pages\FlatPage;
 
 function createTestPage()
 {

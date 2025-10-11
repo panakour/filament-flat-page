@@ -30,7 +30,7 @@ class TestCase extends Orchestra
 
         // Ensure storage directory exists
         $storagePath = storage_path('app/flat-pages');
-        if (!file_exists($storagePath)) {
+        if (! file_exists($storagePath)) {
             mkdir($storagePath, 0755, true);
         }
     }
