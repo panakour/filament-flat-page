@@ -7,6 +7,13 @@
 
 FilamentFlatPage is a plugin for [Filament](https://filamentphp.com/) that allows you to easily create and manage flat file pages with support for translations. It provides a simple way to add configurable, translatable pages to your Filament admin panel without the need for a database.
 
+## Compatibility
+
+| Plugin Version | Filament Version |
+|---------------|------------------|
+| `^0.1.0`      | Filament 4.x     |
+| `^0.0.1`      | Filament 3.x     |
+
 ## Features
 
 - Easily create flat file pages with customizable forms
@@ -52,8 +59,11 @@ php artisan vendor:publish --tag="filament-flat-page-views"
 
 namespace App\Filament\Pages;
 
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Tabs;
+use BackedEnum;
+use UnitEnum;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Panakour\FilamentFlatPage\Pages\FlatPage;
@@ -61,8 +71,8 @@ use Panakour\FilamentFlatPage\Pages\FlatPage;
 class Settings extends FlatPage
 {
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static ?string $navigationGroup = 'Settings';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string | UnitEnum | null $navigationGroup = 'Settings';
     protected static ?string $title = 'Settings';
 
 
@@ -86,7 +96,7 @@ class Settings extends FlatPage
         return [
             Tabs::make('Settings')
                 ->tabs([
-                    Tabs\Tab::make('General')
+                    Tab::make('General')
                         ->icon('heroicon-o-computer-desktop')
                         ->schema([
                             Section::make('App Settings')
@@ -105,7 +115,7 @@ class Settings extends FlatPage
                                 ]),
                         ]),
 
-                    Tabs\Tab::make('Contact')
+                    Tab::make('Contact')
                         ->icon('heroicon-o-envelope')
                         ->schema([
                             Section::make('Contact Information')
@@ -139,7 +149,7 @@ class Settings extends FlatPage
                                 ]),
                         ]),
 
-                    Tabs\Tab::make('Social Networks')
+                    Tab::make('Social Networks')
                         ->icon('heroicon-o-heart')
                         ->schema([
                             Section::make('Social Media Links')

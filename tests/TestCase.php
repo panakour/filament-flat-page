@@ -27,6 +27,12 @@ class TestCase extends Orchestra
         Factory::guessFactoryNamesUsing(
             fn (string $modelName) => 'Panakour\\FilamentFlatPage\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
+
+        // Ensure storage directory exists
+        $storagePath = storage_path('app/flat-pages');
+        if (!file_exists($storagePath)) {
+            mkdir($storagePath, 0755, true);
+        }
     }
 
     protected function getPackageProviders($app)
@@ -51,10 +57,33 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
+        config()->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_filament-flat-page_table.php.stub';
-        $migration->up();
-        */
+        // Set up Filament configuration
+        config()->set('filament.default_filesystem_disk', 'local');
+
+        // Configure flat page settings
+        config()->set('filament-flat-page.locales', ['en', 'fr', 'el']);
+
+        // Disable error handler interference in CI
+        config()->set('app.debug', false);
+    }
+
+    protected function defineDatabaseMigrations()
+    {
+        // No migrations needed for flat file storage
+    }
+
+    protected function tearDown(): void
+    {
+        // Clean up any test files
+        $testFiles = glob(storage_path('app/flat-pages/test-*.json'));
+        foreach ($testFiles as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+
+        parent::tearDown();
     }
 }

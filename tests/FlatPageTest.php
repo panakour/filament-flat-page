@@ -1,12 +1,13 @@
 <?php
 
+use Panakour\FilamentFlatPage\Pages\FlatPage;
 use Filament\Forms\Components\TextInput;
 use Panakour\FilamentFlatPage\FlatFile;
 use Panakour\FilamentFlatPage\FlatFilePageManager;
 
 function createTestPage()
 {
-    return new class extends \Panakour\FilamentFlatPage\Pages\FlatPage
+    return new class extends FlatPage
     {
         public function getFileName(): string
         {
@@ -87,7 +88,6 @@ it('can create a page with multilingual fields, save it, and retrieve its conten
     $page = createTestPage();
 
     $page->activeLocale = 'en';
-
     $page->form->fill([
         'title' => 'English Title',
         'content' => 'English Content',

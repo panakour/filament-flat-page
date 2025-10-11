@@ -2,18 +2,19 @@
 
 namespace Panakour\FilamentFlatPage\Pages;
 
-use Filament\Actions;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
+use Filament\Actions\Action;
+use Filament\Actions\SelectAction;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Panakour\FilamentFlatPage\FlatFile;
 
 /**
- * @property-read \Filament\Forms\Form $form
+ * @property-read Schema $form
  */
 abstract class FlatPage extends Page
 {
-    protected static string $view = 'filament-flat-page::flat-page';
+    protected string $view = 'filament-flat-page::flat-page';
 
     public ?array $data = [];
 
@@ -50,11 +51,11 @@ abstract class FlatPage extends Page
         $this->form->fill($data);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->statePath('data')
-            ->schema($this->getFlatFilePageForm());
+            ->components($this->getFlatFilePageForm());
     }
 
     abstract protected function getFlatFilePageForm(): array;
@@ -88,7 +89,7 @@ abstract class FlatPage extends Page
     protected function getFormActions(): array
     {
         return [
-            Actions\Action::make('Save')
+            Action::make('Save')
                 ->label(__('filament-flat-page::flat-page.save'))
                 ->color('primary')
                 ->submit('Update'),
@@ -102,7 +103,7 @@ abstract class FlatPage extends Page
         }
 
         return [
-            Actions\SelectAction::make('switchLocale')
+            SelectAction::make('switchLocale')
                 ->label(fn () => strtoupper($this->activeLocale))
                 ->options($this->getLocaleOptions()),
         ];
