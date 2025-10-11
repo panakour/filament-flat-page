@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Panakour\FilamentFlatPage;
 
 use Spatie\Valuestore\Valuestore;
 
-class FlatFile
+final class FlatFile
 {
-    protected Valuestore $store;
+    private Valuestore $store;
 
-    protected array $translatableFields;
+    private array $translatableFields;
 
-    protected string $path;
+    private string $path;
 
     public function __construct(string $fileName = '', array $translatableFields = [])
     {
@@ -52,7 +54,7 @@ class FlatFile
         return $this->store->get($key, $default);
     }
 
-    protected function formatTranslatable($value): array
+    private function formatTranslatable($value): array
     {
         if (! is_array($value)) {
             return [app()->getLocale() => $value];

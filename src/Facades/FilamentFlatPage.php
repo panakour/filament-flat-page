@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Panakour\FilamentFlatPage\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use Panakour\FilamentFlatPage\FlatFilePageManager;
 
-class FilamentFlatPage extends Facade
+final class FilamentFlatPage extends Facade
 {
     protected static function getFacadeAccessor()
     {

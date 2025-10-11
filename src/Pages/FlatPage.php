@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Panakour\FilamentFlatPage\Pages;
 
 use Filament\Actions\Action;
@@ -14,17 +16,15 @@ use Panakour\FilamentFlatPage\FlatFile;
  */
 abstract class FlatPage extends Page
 {
-    protected string $view = 'filament-flat-page::flat-page';
-
     public ?array $data = [];
-
-    protected FlatFile $flatFile;
 
     public string $activeLocale;
 
     public $switchLocale = null;
 
-    abstract public function getFileName(): string;
+    protected string $view = 'filament-flat-page::flat-page';
+
+    protected FlatFile $flatFile;
 
     public function __construct()
     {
@@ -32,9 +32,54 @@ abstract class FlatPage extends Page
         $this->activeLocale = app()->getLocale();
     }
 
-    public function mount(): void
+    abstract public function getFileName(): string;
+
+    abstract protected function getFlatFilePageForm(): array;
+
+    public static function getTranslatableLocales(): array
+    {
+        return config('filament-flat-page.locales', ['en']);
+    }
+
+    final public function mount(): void
     {
         $this->fillForm();
+    }
+
+    final public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->statePath('data')
+            ->components($this->getFlatFilePageForm());
+    }
+
+    final public function updatedSwitchLocale()
+    {
+        $this->activeLocale = $this->switchLocale;
+        $this->fillForm();
+    }
+
+    final public function update()
+    {
+        $state = $this->form->getState();
+        $translatableFields = $this->getTranslatableFields();
+
+        foreach ($translatableFields as $field) {
+            if (isset($state[$field])) {
+                $existingTranslations = $this->flatFile->get($field) ?? [];
+                $existingTranslations[$this->activeLocale] = $state[$field];
+                $state[$field] = $existingTranslations;
+            }
+        }
+
+        $this->flatFile->put($state);
+
+        Notification::make()
+            ->title(__('filament-flat-page::flat-page.updated_successfully'))
+            ->success()
+            ->send();
+
+        return redirect()->back();
     }
 
     protected function fillForm(): void
@@ -50,15 +95,6 @@ abstract class FlatPage extends Page
 
         $this->form->fill($data);
     }
-
-    public function form(Schema $schema): Schema
-    {
-        return $schema
-            ->statePath('data')
-            ->components($this->getFlatFilePageForm());
-    }
-
-    abstract protected function getFlatFilePageForm(): array;
 
     protected function getLocaleFromSpatieIfAvailable(): array
     {
@@ -104,43 +140,9 @@ abstract class FlatPage extends Page
 
         return [
             SelectAction::make('switchLocale')
-                ->label(fn () => strtoupper($this->activeLocale))
+                ->label(fn () => mb_strtoupper($this->activeLocale))
                 ->options($this->getLocaleOptions()),
         ];
-    }
-
-    public function updatedSwitchLocale()
-    {
-        $this->activeLocale = $this->switchLocale;
-        $this->fillForm();
-    }
-
-    public function update()
-    {
-        $state = $this->form->getState();
-        $translatableFields = $this->getTranslatableFields();
-
-        foreach ($translatableFields as $field) {
-            if (isset($state[$field])) {
-                $existingTranslations = $this->flatFile->get($field) ?? [];
-                $existingTranslations[$this->activeLocale] = $state[$field];
-                $state[$field] = $existingTranslations;
-            }
-        }
-
-        $this->flatFile->put($state);
-
-        Notification::make()
-            ->title(__('filament-flat-page::flat-page.updated_successfully'))
-            ->success()
-            ->send();
-
-        return redirect()->back();
-    }
-
-    public static function getTranslatableLocales(): array
-    {
-        return config('filament-flat-page.locales', ['en']);
     }
 
     protected function getTranslatableFields(): array

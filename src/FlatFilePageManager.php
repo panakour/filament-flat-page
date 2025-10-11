@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Panakour\FilamentFlatPage;
 
-class FlatFilePageManager
+final class FlatFilePageManager
 {
     public function __construct(private readonly FlatFile $flatFile) {}
 

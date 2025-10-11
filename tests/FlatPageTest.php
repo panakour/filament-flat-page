@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Filament\Forms\Components\TextInput;
 use Panakour\FilamentFlatPage\FlatFile;
 use Panakour\FilamentFlatPage\FlatFilePageManager;
@@ -9,6 +11,11 @@ function createTestPage()
 {
     return new class extends FlatPage
     {
+        public static function getTranslatableLocales(): array
+        {
+            return ['en', 'fr', 'el'];
+        }
+
         public function getFileName(): string
         {
             return 'test-page.json';
@@ -26,11 +33,6 @@ function createTestPage()
         protected function getTranslatableFields(): array
         {
             return ['translatable_text'];
-        }
-
-        public static function getTranslatableLocales(): array
-        {
-            return ['en', 'fr', 'el'];
         }
     };
 }

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Panakour\FilamentFlatPage;
 
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class FilamentFlatPageServiceProvider extends PackageServiceProvider
+final class FilamentFlatPageServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'filament-flat-page';
 
@@ -14,7 +16,7 @@ class FilamentFlatPageServiceProvider extends PackageServiceProvider
 
     public function configurePackage(Package $package): void
     {
-        $package->name(static::$name)
+        $package->name(self::$name)
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()
@@ -32,7 +34,7 @@ class FilamentFlatPageServiceProvider extends PackageServiceProvider
         }
 
         if (file_exists($package->basePath('/../resources/views'))) {
-            $package->hasViews(static::$viewNamespace);
+            $package->hasViews(self::$viewNamespace);
         }
     }
 
