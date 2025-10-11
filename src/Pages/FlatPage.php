@@ -2,11 +2,11 @@
 
 namespace Panakour\FilamentFlatPage\Pages;
 
-use Filament\Schemas\Schema;
 use Filament\Actions\Action;
 use Filament\Actions\SelectAction;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
 use Panakour\FilamentFlatPage\FlatFile;
 
 /**
