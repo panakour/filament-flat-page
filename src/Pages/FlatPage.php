@@ -100,10 +100,10 @@ abstract class FlatPage extends Page
     {
         $locales = [];
 
-        if (! filament()->hasPlugin('spatie-laravel-translatable')) {
+        if (! filament()->hasPlugin('spatie-translatable')) {
             return $locales;
         }
-        $plugin = filament('spatie-laravel-translatable');
+        $plugin = filament('spatie-translatable');
         foreach ($plugin->getDefaultLocales() as $locale) {
             $locales[$locale] = $plugin->getLocaleLabel($locale) ?? $locale;
         }
