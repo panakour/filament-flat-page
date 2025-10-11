@@ -44,6 +44,8 @@ return [
 ];
 ```
 
+**Note:** If you have the Spatie Translatable plugin enabled, the locales will be automatically fetched from there.
+
 Optionally, you can publish the views using
 
 ```bash
