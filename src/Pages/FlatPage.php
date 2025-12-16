@@ -167,6 +167,8 @@ abstract class FlatPage extends Page
 
     protected function getDefaultLocale(): string
     {
-        return static::getTranslatableLocales()[0] ?? app()->getLocale();
+        $locales = static::getTranslatableLocales();
+
+        return reset($locales) ?: app()->getLocale();
     }
 }
