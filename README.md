@@ -18,9 +18,8 @@ FilamentFlatPage is a plugin for [Filament](https://filamentphp.com/) that allow
 
 - Easily create flat file pages with customizable forms
 - Requires no database; data is stored in JSON files
-- Built-in multilingual support for creating translatable content
+- Multilingual support for creating translatable content via [outerweb/filament-translatable-fields](https://github.com/outer-web/filament-translatable-fields)
 - Seamless integration with Filament admin panel
-- Language switcher in the admin page header (integrates with Spatie Translatable, if available)
 
 ## Installation
 
@@ -42,6 +41,17 @@ This will create a `config/filament-flat-page.php` file where you can set your p
 return [
     'locales' => ['en', 'fr', 'el'],
 ];
+```
+
+If you want translatable fields, add the plugin to your Filament panel:
+
+```php
+use Outerweb\FilamentTranslatableFields\TranslatableFieldsPlugin;
+
+$panel->plugins([
+    TranslatableFieldsPlugin::make()
+        ->supportedLocales(config('filament-flat-page.locales')),
+]);
 ```
 
 **Note:** If you have the Spatie Translatable plugin enabled, the locales will be automatically fetched from there.
