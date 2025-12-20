@@ -6,10 +6,8 @@ parameters:
     paths:
         - src
         - config
-    tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
+    tmpDir: build/phpstan
     ignoreErrors:
-        -
-            message: '#Call to an undefined method Filament\\Contracts\\Plugin|Filament\\FilamentManager::(getDefaultLocales|getLocaleLabel)\(\)#'
-            path: src/Pages/FlatPage.php
+        - '#Call to an undefined method Filament\\Forms\\Components\\Field::translatable\(\)#'

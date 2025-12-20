@@ -21,8 +21,9 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "filament/filament": "^4.0",
+        "outerweb/filament-translatable-fields": "^4.0",
         "spatie/laravel-package-tools": "^1.15.0",
         "spatie/valuestore": "^1.3"
     },

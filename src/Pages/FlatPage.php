@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Panakour\FilamentFlatPage\Pages;
 
 use Filament\Actions\Action;
-use Filament\Actions\SelectAction;
+use Filament\Forms\Components\Field;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
 use Panakour\FilamentFlatPage\FlatFile;
 
@@ -20,8 +21,6 @@ abstract class FlatPage extends Page
 
     public string $activeLocale;
 
-    public $switchLocale = null;
-
     protected string $view = 'filament-flat-page::flat-page';
 
     protected FlatFile $flatFile;
@@ -29,7 +28,7 @@ abstract class FlatPage extends Page
     public function __construct()
     {
         $this->flatFile = new FlatFile($this->getFileName(), $this->getTranslatableFields());
-        $this->activeLocale = app()->getLocale();
+        $this->activeLocale = $this->getDefaultLocale();
     }
 
     abstract public function getFileName(): string;
@@ -50,25 +49,26 @@ abstract class FlatPage extends Page
     {
         return $schema
             ->statePath('data')
-            ->components($this->getFlatFilePageForm());
-    }
-
-    final public function updatedSwitchLocale()
-    {
-        $this->activeLocale = $this->switchLocale;
-        $this->fillForm();
+            ->components($this->applyTranslatable($this->getFlatFilePageForm()));
     }
 
     final public function update()
     {
         $state = $this->form->getState();
         $translatableFields = $this->getTranslatableFields();
+        $locale = $this->activeLocale;
 
         foreach ($translatableFields as $field) {
             if (isset($state[$field])) {
-                $existingTranslations = $this->flatFile->get($field) ?? [];
-                $existingTranslations[$this->activeLocale] = $state[$field];
-                $state[$field] = $existingTranslations;
+                $existing = $this->flatFile->get($field) ?? [];
+                $value = $state[$field];
+                $translations = is_array($existing) ? $existing : [];
+                if (is_array($value)) {
+                    $translations = [...$translations, ...$value];
+                } else {
+                    $translations[$locale] = $value;
+                }
+                $state[$field] = $translations;
             }
         }
 
@@ -86,40 +86,58 @@ abstract class FlatPage extends Page
     {
         $data = $this->flatFile->all();
         $translatableFields = $this->getTranslatableFields();
+        $defaultLocale = $this->getDefaultLocale();
 
         foreach ($translatableFields as $field) {
-            if (isset($data[$field]) && is_array($data[$field])) {
-                $data[$field] = $data[$field][$this->activeLocale] ?? '';
+            if (! isset($data[$field])) {
+                continue;
+            }
+
+            if (! is_array($data[$field])) {
+                $data[$field] = [$defaultLocale => $data[$field]];
             }
         }
 
         $this->form->fill($data);
     }
 
-    protected function getLocaleFromSpatieIfAvailable(): array
+    protected function applyTranslatable(array $components): array
     {
-        $locales = [];
-
-        if (! filament()->hasPlugin('spatie-translatable')) {
-            return $locales;
-        }
-        $plugin = filament('spatie-translatable');
-        foreach ($plugin->getDefaultLocales() as $locale) {
-            $locales[$locale] = $plugin->getLocaleLabel($locale) ?? $locale;
+        if (! $this->hasTranslatableFields()) {
+            return $components;
         }
 
-        return $locales;
+        return collect($components)
+            ->map(fn (Component $component) => $this->applyTranslatableToComponent($component))
+            ->all();
     }
 
-    protected function getLocaleOptions(): array
+    protected function applyTranslatableToComponent(Component $component): Component
     {
-        $locales = $this->getLocaleFromSpatieIfAvailable();
-        if (! empty($locales)) {
-            return $locales;
+        if ($component instanceof Field && in_array($component->getName(), $this->getTranslatableFields(), true)) {
+            try {
+                $component = $component->translatable();
+            } catch (\BadMethodCallException) {
+                // translatable macro not available; leave as-is
+            }
         }
-        $locales = $this->getTranslatableLocales();
 
-        return array_combine($locales, array_map('strtoupper', $locales));
+        if (method_exists($component, 'getDefaultChildComponents')) {
+            /** @var array<Component> $children */
+            $children = $component->getDefaultChildComponents() ?? [];
+            if (! empty($children)) {
+                $children = array_map(
+                    fn (Component $child) => $this->applyTranslatableToComponent($child),
+                    $children,
+                );
+                // Re-assign mapped children without forcing schema/container creation.
+                if (method_exists($component, 'childComponents')) {
+                    $component->childComponents($children);
+                }
+            }
+        }
+
+        return $component;
     }
 
     protected function getFormActions(): array
@@ -134,15 +152,7 @@ abstract class FlatPage extends Page
 
     protected function getHeaderActions(): array
     {
-        if (! $this->hasTranslatableFields()) {
-            return [];
-        }
-
-        return [
-            SelectAction::make('switchLocale')
-                ->label(fn () => mb_strtoupper($this->activeLocale))
-                ->options($this->getLocaleOptions()),
-        ];
+        return [];
     }
 
     protected function getTranslatableFields(): array
@@ -153,5 +163,12 @@ abstract class FlatPage extends Page
     protected function hasTranslatableFields(): bool
     {
         return ! empty($this->getTranslatableFields());
+    }
+
+    protected function getDefaultLocale(): string
+    {
+        $locales = static::getTranslatableLocales();
+
+        return reset($locales) ?: app()->getLocale();
     }
 }
