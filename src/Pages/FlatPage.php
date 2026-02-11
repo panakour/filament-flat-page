@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Panakour\FilamentFlatPage\Pages;
 
+use BadMethodCallException;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use Filament\Notifications\Notification;
@@ -117,7 +118,7 @@ abstract class FlatPage extends Page
         if ($component instanceof Field && in_array($component->getName(), $this->getTranslatableFields(), true)) {
             try {
                 $component = $component->translatable();
-            } catch (\BadMethodCallException) {
+            } catch (BadMethodCallException) {
                 // translatable macro not available; leave as-is
             }
         }
