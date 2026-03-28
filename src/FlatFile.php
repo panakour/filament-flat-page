@@ -27,7 +27,7 @@ final class FlatFile
     public function setStore(string $fileName): self
     {
         if (! empty($fileName)) {
-            $this->store = Valuestore::make($this->path.$fileName);
+            $this->store = Valuestore::make($this->path . $fileName);
         }
 
         return $this;
