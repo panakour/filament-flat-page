@@ -1,0 +1,31 @@
+variant = "loose"
+
+[[issues]]
+file = "src/FlatFile.php"
+code = "less-specific-argument"
+message = 'Argument type mismatch for argument #1 of `Spatie\Valuestore\Valuestore::put`: expected `array<array-key, mixed>|string`, but provided type `array-key` is less specific.'
+count = 2
+
+[[issues]]
+file = "src/Pages/FlatPage.php"
+code = "less-specific-argument"
+message = 'Argument type mismatch for argument #1 of `Filament\Schemas\Concerns\HasState::fill`: expected `array<string, mixed>|null`, but provided type `array<array-key, mixed>` is less specific.'
+count = 1
+
+[[issues]]
+file = "src/Pages/FlatPage.php"
+code = "less-specific-nested-argument-type"
+message = 'Argument type mismatch for argument #1 of `Filament\Actions\Concerns\HasLabel::label`: expected `(closure(...mixed=): mixed)|Illuminate\Contracts\Support\Htmlable|null|string`, but provided type `array<array-key, mixed>|null|string` is less specific.'
+count = 1
+
+[[issues]]
+file = "src/Pages/FlatPage.php"
+code = "less-specific-nested-argument-type"
+message = 'Argument type mismatch for argument #1 of `Filament\Notifications\Concerns\HasTitle::title`: expected `(closure(...mixed=): mixed)|null|string`, but provided type `array<array-key, mixed>|null|string` is less specific.'
+count = 1
+
+[[issues]]
+file = "src/Pages/FlatPage.php"
+code = "less-specific-nested-argument-type"
+message = 'Argument type mismatch for argument #1 of `Filament\Schemas\Concerns\HasComponents::components`: expected `(closure(...mixed): mixed)|Filament\Actions\Action|Filament\Actions\ActionGroup|Filament\Schemas\Components\Component|Illuminate\Contracts\Support\Htmlable|array<array-key, Filament\Actions\Action|Filament\Actions\ActionGroup|Filament\Schemas\Components\Component|Illuminate\Contracts\Support\Htmlable|string>|string`, but provided type `array<array-key, mixed>` is less specific.'
+count = 1

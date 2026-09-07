@@ -1,0 +1,34 @@
+# Mago (https://mago.carthage.software) static analysis; run with `composer analyse (vendor/bin/mago analyze)`.
+php-version = "8.4"
+
+[source]
+paths = ["src", "config"]
+# Dependencies are scanned for symbols only, never analyzed.
+includes = ["vendor"]
+# Testbench's skeleton app. Its vendor/ symlink points back at this package's vendor/; when the
+# walker hits that loop it stops scanning vendor/ and framework classes come back "unknown".
+excludes = ["vendor/orchestra/testbench-core/laravel"]
+
+[analyzer]
+# Findings accepted when Mago replaced PHPStan; the run stays green and only new issues fail it.
+# Regenerate: `vendor/bin/mago analyze --generate-baseline`; prune fixed entries with
+# `vendor/bin/mago analyze --remove-outdated-baseline-entries`.
+baseline = "analysis-baseline.toml"
+ignore = [
+    # Without Larastan-style Eloquent/facade inference, model attributes, scopes, relations and
+    # macros (e.g. ->translatable()) surface as `mixed` or as magic (__get/__call) access.
+    "mixed-argument",
+    "mixed-array-access",
+    "mixed-array-assignment",
+    "mixed-array-index",
+    "mixed-assignment",
+    "mixed-clone",
+    "mixed-destructuring-shape",
+    "mixed-method-access",
+    "mixed-operand",
+    "mixed-property-access",
+    "mixed-property-type-coercion",
+    "mixed-return-statement",
+    "non-documented-method",
+    "non-documented-property",
+]

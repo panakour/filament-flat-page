@@ -1,0 +1,32 @@
+name: Mago
+
+on:
+  push:
+    paths:
+      - '**.php'
+      - 'mago.toml'
+      - 'analysis-baseline.toml'
+      - 'composer.json'
+
+jobs:
+  mago:
+    name: mago analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v4
+
+      - name: Run Mago
+        run: vendor/bin/mago analyze
+        env:
+          # The composer wrapper downloads the mago binary from GitHub releases on first
+          # run; the token avoids the anonymous API rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
